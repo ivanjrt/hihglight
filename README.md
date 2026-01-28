@@ -3,7 +3,8 @@
 <img width="889" height="546" alt="image" src="https://github.com/user-attachments/assets/12d5d63d-9658-4e61-8cba-ad62118d7147" />
 
 
-A modern **WPF-based image editing application** with a sleek dark theme, designed for quick image annotations and edits.
+A Simple modern **WPF-based image editing application** with a sleek dark theme, designed for quick image annotations and edits, 
+without having to save Personal information directly to the computer, just manipulating the clipboard or already saved files
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Framework](https://img.shields.io/badge/.NET-4.0-purple)

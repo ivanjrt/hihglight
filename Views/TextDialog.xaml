@@ -1,0 +1,53 @@
+<Window x:Class="ImageEditor.Views.TextDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Text" Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Text Input -->
+        <TextBlock Grid.Row="0" Text="Text:" Margin="0,0,0,5"/>
+        <TextBox Grid.Row="1" Name="txtTextInput" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+
+        <!-- Font Size -->
+        <TextBlock Grid.Row="2" Text="Font Size:" Margin="0,10,0,5"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Slider Grid.Column="0" Name="sliderFontSize" Minimum="8" Maximum="72" Value="16" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="{Binding ElementName=sliderFontSize, Path=Value, StringFormat={}{0:F0}}" Margin="10,0,5,0" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="px" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Color Picker -->
+        <TextBlock Grid.Row="2" Text="Color:" Margin="150,10,0,5"/>
+        <ComboBox Grid.Row="3" Name="cmbColor" Width="120" HorizontalAlignment="Right" SelectedIndex="0">
+            <ComboBoxItem Tag="Black" Foreground="Black">Black</ComboBoxItem>
+            <ComboBoxItem Tag="Red" Foreground="Red">Red</ComboBoxItem>
+            <ComboBoxItem Tag="Blue" Foreground="Blue">Blue</ComboBoxItem>
+            <ComboBoxItem Tag="Green" Foreground="Green">Green</ComboBoxItem>
+            <ComboBoxItem Tag="Yellow" Foreground="Yellow">Yellow</ComboBoxItem>
+            <ComboBoxItem Tag="Orange" Foreground="Orange">Orange</ComboBoxItem>
+            <ComboBoxItem Tag="Purple" Foreground="Purple">Purple</ComboBoxItem>
+            <ComboBoxItem Tag="White" Foreground="White">White</ComboBoxItem>
+        </ComboBox>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Name="btnOK" Content="OK" Width="80" Height="25" Margin="0,0,10,0" Click="btnOK_Click" IsDefault="True"/>
+            <Button Name="btnCancel" Content="Cancel" Width="80" Height="25" Click="btnCancel_Click" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

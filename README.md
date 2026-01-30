@@ -1,4 +1,4 @@
-# ✨ Image Editor 1.0.1
+# ✨ Image Editor 1.0.2
 
 <img width="902" height="675" alt="image" src="https://github.com/user-attachments/assets/00b6487d-2b4e-4d7c-b5df-ce6db0565901" />
 

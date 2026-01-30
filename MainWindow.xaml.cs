@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ImageEditor.Models;
+using ImageEditor.Views;
 
 namespace ImageEditor
 {
@@ -40,6 +41,50 @@ namespace ImageEditor
             InitializeComponent();
             cmbColor.SelectionChanged += CmbColor_SelectionChanged;
             sliderThickness.ValueChanged += SliderThickness_ValueChanged;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Check if Ctrl is pressed
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                switch (e.Key)
+                {
+                    case Key.C:
+                        // Copy to clipboard
+                        if (_sourceImage != null)
+                        {
+                            BtnCopyToClipboard_Click(null, null);
+                            e.Handled = true;
+                        }
+                        break;
+
+                    case Key.V:
+                        // Paste from clipboard
+                        BtnPaste_Click(null, null);
+                        e.Handled = true;
+                        break;
+
+                    case Key.Z:
+                        // Undo
+                        if (_shapes.Count > 0)
+                        {
+                            BtnUndo_Click(null, null);
+                            e.Handled = true;
+                        }
+                        break;
+                }
+            }
+            // Escape key handling
+            else if (e.Key == Key.Escape)
+            {
+                // Cancel active text box
+                if (_activeTextBox != null)
+                {
+                    CancelActiveTextBox();
+                    e.Handled = true;
+                }
+            }
         }
 
         private void CmbColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -149,6 +194,7 @@ namespace ImageEditor
             btnCopyToClipboard.IsEnabled = true;
             btnReset.IsEnabled = true;
             UpdateUndoButton();
+            UpdateContextMenuState();
 
             // Auto fit to screen
             Dispatcher.BeginInvoke(new Action(() =>
@@ -300,7 +346,15 @@ namespace ImageEditor
                 _shapes.Clear();
                 RenderShapes();
                 UpdateUndoButton();
+                UpdateContextMenuState();
             }
+        }
+
+        private void BtnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var helpDialog = new HelpDialog();
+            helpDialog.Owner = this;
+            helpDialog.ShowDialog();
         }
 
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
@@ -310,12 +364,22 @@ namespace ImageEditor
                 _shapes.RemoveAt(_shapes.Count - 1);
                 RenderShapes();
                 UpdateUndoButton();
+                UpdateContextMenuState();
             }
         }
 
         private void UpdateUndoButton()
         {
             btnUndo.IsEnabled = _shapes.Count > 0 && _sourceImage != null;
+            ctxUndo.IsEnabled = _shapes.Count > 0 && _sourceImage != null;
+        }
+
+        private void UpdateContextMenuState()
+        {
+            ctxCopy.IsEnabled = _sourceImage != null;
+            ctxPaste.IsEnabled = Clipboard.ContainsImage();
+            ctxUndo.IsEnabled = _shapes.Count > 0 && _sourceImage != null;
+            ctxClear.IsEnabled = _shapes.Count > 0 && _sourceImage != null;
         }
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -338,6 +402,12 @@ namespace ImageEditor
             {
                 CreatePreview(_startPoint);
             }
+        }
+
+        private void Canvas_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // Update context menu state before it opens
+            UpdateContextMenuState();
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -446,6 +516,7 @@ namespace ImageEditor
                 _shapes.Add(shape);
                 RenderShapes();
                 UpdateUndoButton();
+                UpdateContextMenuState();
             }
         }
 
@@ -541,6 +612,7 @@ namespace ImageEditor
                 _shapes.Add(textShape);
                 RenderShapes();
                 UpdateUndoButton();
+                UpdateContextMenuState();
             }
         }
 

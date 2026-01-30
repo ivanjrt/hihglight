@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="✨ Image Editor 1.0.0" Height="680" Width="920"
         WindowStartupLocation="CenterScreen"
-        Background="#1E1E1E">
+        Background="#1E1E1E"
+        KeyDown="Window_KeyDown">
     <Window.Resources>
         <!-- Modern Dark Button Style -->
         <Style x:Key="ModernButton" TargetType="Button">
@@ -38,6 +39,28 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- Dark ContextMenu Style -->
+        <Style TargetType="ContextMenu">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#404040"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#404040"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#666666"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -126,7 +149,9 @@
             <Separator Width="10" Background="Transparent"/>
             <Button x:Name="btnUndo" Content="↩️ Undo" Width="75" Height="30" Margin="3,4,3,4" Click="BtnUndo_Click" IsEnabled="False" Style="{StaticResource ModernButton}"/>
             <Button x:Name="btnCopyToClipboard" Content="📤 Copy" Width="80" Height="30" Margin="3,4,3,4" Click="BtnCopyToClipboard_Click" IsEnabled="False" FontWeight="Bold" Style="{StaticResource ModernButton}"/>
-            <Button x:Name="btnReset" Content="🗑️ Clear" Width="80" Height="30" Margin="3,4,6,4" Click="BtnReset_Click" IsEnabled="False" Style="{StaticResource ModernButton}"/>
+            <Button x:Name="btnReset" Content="🗑️ Clear" Width="80" Height="30" Margin="3,4,3,4" Click="BtnReset_Click" IsEnabled="False" Style="{StaticResource ModernButton}"/>
+            <Separator Width="10" Background="Transparent"/>
+            <Button x:Name="btnHelp" Content="❓ Help" Width="75" Height="30" Margin="3,4,6,4" Click="BtnHelp_Click" Style="{StaticResource ModernButton}"/>
         </StackPanel>
 
         <!-- Canvas for image editing -->
@@ -136,7 +161,18 @@
                     <Canvas x:Name="mainCanvas" Background="#1A1A1A"
                             MouseDown="Canvas_MouseDown"
                             MouseMove="Canvas_MouseMove"
-                            MouseUp="Canvas_MouseUp">
+                            MouseUp="Canvas_MouseUp"
+                            MouseRightButtonUp="Canvas_MouseRightButtonUp">
+                        <Canvas.ContextMenu>
+                            <ContextMenu Background="#2D2D2D" Foreground="#E0E0E0">
+                                <MenuItem Header="📤 Copy (Ctrl+C)" Click="BtnCopyToClipboard_Click" Name="ctxCopy"/>
+                                <Separator/>
+                                <MenuItem Header="📋 Paste (Ctrl+V)" Click="BtnPaste_Click" Name="ctxPaste"/>
+                                <MenuItem Header="↩️ Undo (Ctrl+Z)" Click="BtnUndo_Click" Name="ctxUndo"/>
+                                <Separator/>
+                                <MenuItem Header="🗑️ Clear All" Click="BtnReset_Click" Name="ctxClear"/>
+                            </ContextMenu>
+                        </Canvas.ContextMenu>
                         <!-- Image will be added here programmatically -->
                     </Canvas>
                 </ScrollViewer>
